@@ -1,0 +1,17 @@
+{
+  "name": "momo-viewer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "oauth": "^0.9.14"
+  },
+  "devDependencies": {
+    "electron": "^1.4.6"
+  }
+}
