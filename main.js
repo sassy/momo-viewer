@@ -32,6 +32,14 @@ function createWindow() {
       'HMAC-SHA1'
   );
 
+  const load_url = url.format({
+    pathname: path.join(__dirname, 'index.html'),
+    query: {'token': token.consumer_key },
+    protocol: 'file:',
+    slashes: true
+  });
+  win.loadURL(load_url);
+  /*
   oauth.getOAuthRequestToken((error, oauth_token, oauth_token_secret, results) => {
     const authURL = 'https://www.tumblr.com/oauth/authorize?oauth_token=' + oauth_token;
     win.loadURL(authURL);
@@ -55,6 +63,7 @@ function createWindow() {
       win.loadURL(load_url);
     }
   });
+  */
 
 }
 
