@@ -3,12 +3,23 @@ const OAuth = require('oauth');
 const path = require('path');
 const url = require('url');
 const fs = require('fs');
+const storage = require('electron-json-storage');
 
 let win;
 
 function setupToken() {
   const tokenStr = fs.readFileSync('./token.json', 'utf-8');
   return JSON.parse(tokenStr);
+}
+
+function loadUrlWithToken(token) {
+  const load_url = url.format({
+    pathname: path.join(__dirname, 'index.html'),
+    query: {'token': token.consumer_key },
+    protocol: 'file:',
+    slashes: true
+  });
+  win.loadURL(load_url);
 }
 
 function createWindow() {
@@ -32,17 +43,37 @@ function createWindow() {
       'HMAC-SHA1'
   );
 
-  const load_url = url.format({
-    pathname: path.join(__dirname, 'index.html'),
-    query: {'token': token.consumer_key },
-    protocol: 'file:',
-    slashes: true
+  const gettingToken = new Promise((resolve, reject) => {
+    storage.get('access_token', (error, data) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      if (Object.keys(data).length === 0) {
+        resolve();
+      } else {
+        resolve(data);
+      }
+    });
   });
-  win.loadURL(load_url);
-  /*
-  oauth.getOAuthRequestToken((error, oauth_token, oauth_token_secret, results) => {
-    const authURL = 'https://www.tumblr.com/oauth/authorize?oauth_token=' + oauth_token;
-    win.loadURL(authURL);
+
+  gettingToken.then((data) => {
+    if (data === undefined) {
+      oauth.getOAuthRequestToken((error, oauth_token, oauth_token_secret, results) => {
+        const json = {
+          oauth_token: oauth_token,
+          oauth_token_secret: oauth_token_secret
+        };
+        storage.set('access_token', json, (error) => {
+          console.log(error);
+        });
+        const authURL = 'https://www.tumblr.com/oauth/authorize?oauth_token=' + oauth_token;
+        win.loadURL(authURL);
+      });
+    } else {
+      loadUrlWithToken(token);
+    }
   });
 
   win.on('closed', () => {
@@ -63,8 +94,6 @@ function createWindow() {
       win.loadURL(load_url);
     }
   });
-  */
-
 }
 
 app.on('ready', createWindow);
