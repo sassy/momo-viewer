@@ -14,7 +14,7 @@ function setupToken() {
 
 function loadUrlWithToken(token) {
   const load_url = url.format({
-    pathname: path.join(__dirname, 'index.html'),
+    pathname: path.join(__dirname, 'renderer', 'index.html'),
     query: {'token': token.consumer_key },
     protocol: 'file:',
     slashes: true
@@ -85,13 +85,7 @@ function createWindow() {
     const oauth_token = match[1];
     if (match) {
       event.preventDefault();
-      const load_url = url.format({
-        pathname: path.join(__dirname, 'index.html'),
-        query: {'token': token.consumer_key },
-        protocol: 'file:',
-        slashes: true
-      });
-      win.loadURL(load_url);
+      loadUrlWithToken(token);
     }
   });
 }
