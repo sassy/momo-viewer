@@ -8,22 +8,26 @@ function incrementImg() {
 }
 
 //Reducer
-function imageState(state = {index: 0}, action) {
+function imageState(state = {index: 0, images:[]}, action) {
   switch(action.type) {
   case 'INCREMENT_IMG':
-    return {index : state.index + 1};
+    console.log('reducer');
+    let index = state.images.length - 1 <= state.index ? 0 : state.index + 1;
+    return Object.assign({}, state, {
+      index: index
+    });
   default:
     return state;
   }
 }
 
-const store = createStore(imageState, {index: 0});
+let store;
 let imageArray = [];
-
 
 function changeImage() {
   store.dispatch(incrementImg());
-  document.getElementById('image1').src = imageArray[ store.getState().index];
+  const image1 = document.getElementById('image1');
+  image1.setAttribute('class', 'slide transition');
 }
 
 let apikey = location.href.split('?')[1].split('=')[1];
@@ -40,5 +44,14 @@ fetch(url).then((res) => {
 
     imageArray.push(post.photos[0].alt_sizes[1].url);
   });
-  document.getElementById('image1').src = imageArray[store.getState().index];
+  store = createStore(imageState, {index: 0, images: imageArray});
+  const state = store.getState();
+  document.getElementById('image1').src = state.images[state.index];
 });
+
+document.getElementById('image1').addEventListener('webkitTransitionEnd', (e) => {
+  const image1 = document.getElementById('image1');
+  image1.setAttribute('class', 'slide');
+  const state = store.getState();
+  image1.src = state.images[state.index];
+}, false);

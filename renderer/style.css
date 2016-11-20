@@ -1,0 +1,12 @@
+body {
+  background-color: #000000;
+}
+
+img.slide {
+  opacity : 1;
+  -webkit-transition: opacity 0.3s linear;
+}
+
+img.slide.transition {
+  opacity: 0.2;
+}
