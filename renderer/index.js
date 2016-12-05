@@ -11,7 +11,6 @@ function incrementImg() {
 function imageState(state = {index: 0, images:[]}, action) {
   switch(action.type) {
   case 'INCREMENT_IMG':
-    console.log('reducer');
     let index = state.images.length - 1 <= state.index ? 0 : state.index + 1;
     return Object.assign({}, state, {
       index: index
