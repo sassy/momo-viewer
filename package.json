@@ -11,7 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "electron-json-storage": "^2.1.0",
-    "oauth": "^0.9.14",
+    "oauth": "^0.10.0",
     "redux": "^3.6.0"
   },
   "devDependencies": {
